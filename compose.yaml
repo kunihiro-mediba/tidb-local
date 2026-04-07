@@ -1,0 +1,24 @@
+services:
+  tidb:
+    container_name: tidb-local-server
+    image: pingcap/tidb:v8.5.5
+    ports:
+      - 4000:4000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:10080/status"]
+      interval: 5s     # 5秒おきにチェック
+      timeout: 5s      # 5秒でタイムアウト
+      retries: 5       # 5回失敗したら異常とみなす
+      start_period: 5s # 起動直後の数秒は失敗してもカウントしない
+
+  tidb-initializer:
+    container_name: tidb-local-initializer
+    image: mysql:8.0
+    depends_on:
+      tidb:
+        condition: service_healthy
+    volumes:
+      - ./docker/tidb-initializer/start.sh:/start.sh
+      - ./docker/tidb-initializer/initdb.d:/initdb.d
+    entrypoint: ["/bin/bash"]
+    command: ["/start.sh"]
