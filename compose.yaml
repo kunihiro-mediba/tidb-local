@@ -22,3 +22,15 @@ services:
       - ./docker/tidb-initializer/initdb.d:/initdb.d
     entrypoint: ["/bin/bash"]
     command: ["/start.sh"]
+
+  tidb-admin:
+    container_name: tidb-local-admin
+    image: mysql:8.0
+    depends_on:
+      tidb:
+        condition: service_healthy
+    volumes:
+      - ./docker/tidb-admin/data:/data
+    working_dir: /data
+    entrypoint: ["/bin/bash"]
+    tty: true

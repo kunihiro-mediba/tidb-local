@@ -16,6 +16,21 @@
 docker compose up -d
 ```
 
+### SQLクエリの実行
+
+```bash
+docker compose exec tidb-admin mysql -h tidb -P 4000 -u root test
+```
+
+### 全テーブルのCREATE文の取得
+
+```bashbash
+docker compose exec tidb-admin mysqldump -h tidb -P 4000 -u root test > create.sql
+```
+
+→ docker/tidbadmin/data ディレクトリに create.sql が作成される
+
+
 ### 終了
 
 ```bash
